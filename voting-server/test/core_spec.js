@@ -42,6 +42,62 @@ describe('application logic', () => {
             }));
 
         });
+
+        it('puts winner of current vote back to entries', () => {
+            const state = fromJS({
+                vote: {
+                    pair: ['Trainspotting', '28 Days Later'],
+                    tally: {
+                        'Trainspotting': 4,
+                        '28 Days Later': 2
+                    }
+                },
+                entries: ['Sunshine', 'Millions', '127 Hours']
+            });
+
+            const nextState = next(state);
+            expect(nextState).to.equal(fromJS({
+                vote: { pair: ['Sunshine', 'Millions'] },
+                entries: ['127 Hours', 'Trainspotting']
+            }));
+        });
+
+        it('puts both from tied vote back to entries', () => {
+            const state = fromJS({
+                vote: {
+                    pair: ['Trainspotting', '28 Days Later'],
+                    tally: {
+                        'Trainspotting': 4,
+                        '28 Days Later': 4
+                    }
+                },
+                entries: ['127 Hours', 'Millions']
+            });
+            const nextState = next(state);
+            expect(nextState).to.equal(fromJS({
+                vote: {
+                    pair: ['127 Hours', 'Millions']
+                },
+                entries: ['Trainspotting', '28 Days Later']
+            }));
+        });
+
+        it('marks winner when just one entry left', () => {
+            const state = fromJS({
+                vote: {
+                    pair: ['Trainspotting', '28 Days Later'],
+                    tally: {
+                        'Trainspotting': 4,
+                        '28 Days Later': 2
+                    }
+                },
+                entries: []
+            });
+            const nextState = next(state);
+            expect(nextState).to.equal(Map({
+                winner: 'Trainspotting'
+            }));
+        });
     })
 
     describe('vote', () => {
