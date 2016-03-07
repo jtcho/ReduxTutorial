@@ -2,8 +2,13 @@
 
 import {List, Map} from 'immutable';
 
+export const INITIAL_STATE = Map();
+
 /**
- *
+ * Sets the voting entries for the app instance.
+ * :param state state to change
+ * :type state  immutable.Map
+ * :param entries
  */
 export function setEntries(state, entries) {
     return state.set('entries', List(entries));
@@ -44,5 +49,5 @@ export function next(state) {
 }
 
 export function vote(state, entry) {
-    return state.updateIn(['vote', 'tally', entry], 0, tally => tally + 1);
+    return state.updateIn(['tally', entry], 0, tally => tally + 1);
 }
